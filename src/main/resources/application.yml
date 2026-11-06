@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: backlog-master
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/backlogMaster
+    username: backlogMaster
+    password: backlogMaster
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hinernate:
+        format_sql: true
