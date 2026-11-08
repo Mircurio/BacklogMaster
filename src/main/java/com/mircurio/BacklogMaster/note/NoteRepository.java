@@ -5,4 +5,5 @@ import java.util.List;
 
 public interface NoteRepository extends JpaRepository<Note, Long> {
     List<Note> findAllByOrderByCreatedAtDesc();
+    long countByCategoryId(long categoryId);
 }

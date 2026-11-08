@@ -3,6 +3,8 @@ package com.mircurio.BacklogMaster.note;
 import com.mircurio.BacklogMaster.category.Category;
 import com.mircurio.BacklogMaster.category.CategoryRepository;
 import com.mircurio.BacklogMaster.category.dto.CategoryResponse;
+import com.mircurio.BacklogMaster.common.exception.CategoryNotFoundException;
+import com.mircurio.BacklogMaster.common.exception.NoteNotFoundException;
 import com.mircurio.BacklogMaster.note.dto.NoteRequest;
 import com.mircurio.BacklogMaster.note.dto.NoteResponse;
 
@@ -32,7 +34,7 @@ public class NoteService {
 
     public NoteResponse getById(Long id) {
         Note note = noteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Note " + id + " not found"));
+                .orElseThrow(() -> new NoteNotFoundException(id));
         return toResponse(note);
     }
 
@@ -42,7 +44,7 @@ public class NoteService {
 
         if (request.categotyId() != null) {
             Category category = categoryRepository.findById(request.categotyId())
-                    .orElseThrow(() -> new RuntimeException("Category " + request.categotyId() + " not found"));
+                    .orElseThrow(() -> new CategoryNotFoundException(request.categotyId()));
             note.setCategory(category);
         }
 
@@ -53,13 +55,13 @@ public class NoteService {
     @Transactional
     public NoteResponse update(Long id, NoteRequest request) {
         Note note = noteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Note " + id + " not found"));
+                .orElseThrow(() -> new NoteNotFoundException(id));
         note.setTitle(request.title());
         note.setContent(request.content());
 
         if (request.categotyId() != null) {
             Category category = categoryRepository.findById(request.categotyId())
-                    .orElseThrow(() -> new RuntimeException("Category " + request.categotyId() + " not found"));
+                    .orElseThrow(() -> new CategoryNotFoundException(request.categotyId()));
             note.setCategory(category);
         }
         else
@@ -73,7 +75,7 @@ public class NoteService {
     @Transactional
     public void delete(Long id) {
         if (!noteRepository.existsById(id)) {
-            throw new RuntimeException("Note " + id + " not found");
+            throw new NoteNotFoundException(id);
         }
         noteRepository.deleteById(id);
     }
